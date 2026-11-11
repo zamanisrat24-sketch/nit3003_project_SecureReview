@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SecureReview AI</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F6F7FB;--surf:#fff;--ink:#10142B;--tx:#1F2544;--mut:#4B5470;--ln:#D9DDEB;--pri:#3A3FD8;--prif:#fff;--soft:#E9EAFD;--nav:#10142B;--bd:#6B7391;--crit:#B42318;--critb:#FDE8E6;--high:#B54708;--highb:#FFEBD6;--med:#7A5900;--medb:#FFF3C4;--low:#0B6B4F;--lowb:#DDF5EA;--neu:#ECEEF6;--ring:#F59E0B;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1022;--surf:#161B36;--ink:#F2F4FF;--tx:#DDE1F5;--mut:#A9B1D1;--ln:#2B3358;--pri:#8C90FF;--prif:#0C1022;--soft:#23294F;--nav:#080B18;--bd:#8C94B8;--crit:#FF9A90;--critb:#4A1B1B;--high:#FFB877;--highb:#4A2D12;--med:#F2D56B;--medb:#443610;--low:#6FDDB1;--lowb:#12392D;--neu:#232A4C;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0C1022;--surf:#161B36;--ink:#F2F4FF;--tx:#DDE1F5;--mut:#A9B1D1;--ln:#2B3358;--pri:#8C90FF;--prif:#0C1022;--soft:#23294F;--nav:#080B18;--bd:#8C94B8;--crit:#FF9A90;--critb:#4A1B1B;--high:#FFB877;--highb:#4A2D12;--med:#F2D56B;--medb:#443610;--low:#6FDDB1;--lowb:#12392D;--neu:#232A4C;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--tx);font:400 15px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+:focus-visible{outline:3px solid var(--ring);outline-offset:2px;border-radius:8px}
+.skip{position:absolute;left:12px;top:-60px;background:var(--pri);color:var(--prif);padding:10px 16px;border-radius:8px;font-weight:600;z-index:9;text-decoration:none}
+.skip:focus{top:12px}
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+nav{background:var(--nav);padding:24px 16px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh}
+.auth nav{display:none}.auth .app{grid-template-columns:1fr}
+.logo{display:flex;gap:12px;align-items:center;color:#fff;font-weight:700;padding:0 12px 20px}
+.mark{width:36px;height:36px;border-radius:10px;background:#3A3FD8;display:grid;place-items:center;font-size:14px}
+nav a{color:#C9CFE8;text-decoration:none;font-weight:500;padding:11px 14px;border-radius:10px;min-height:44px;display:flex;align-items:center;gap:12px;border-left:4px solid transparent}
+nav a:hover{background:#1B2142;color:#fff}
+nav a[aria-current=page]{background:#1B2142;color:#fff;font-weight:600;border-left-color:#8C90FF}
+nav .me{margin-top:auto;color:#C9CFE8;font-size:13px;padding:12px;border-top:1px solid #2C3358}
+main{padding:36px 40px 56px;max-width:1240px;width:100%}
+main:focus{outline:none}
+h1{font-size:28px;line-height:36px;color:var(--ink);font-weight:700}
+h2{font-size:18px;line-height:24px;color:var(--ink);font-weight:600}
+.sub{color:var(--mut);margin:4px 0 24px}
+.card{background:var(--surf);border:1px solid var(--ln);border-radius:16px;padding:22px;box-shadow:0 4px 16px rgba(16,20,43,.07)}
+.grid{display:grid;gap:20px}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:1.5fr 1fr}.g2b{grid-template-columns:1.2fr 1fr}
+.mt{margin-top:20px}
+.kpi b{display:block;font-size:34px;line-height:42px;color:var(--ink)}.kpi span{font-size:13px;color:var(--mut)}
+.btn{font:600 15px Inter,sans-serif;min-height:44px;padding:0 20px;border-radius:10px;border:1.5px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.p{background:var(--pri);color:var(--prif)}.p:hover{filter:brightness(.9)}
+.s{background:var(--surf);color:var(--ink);border-color:var(--bd)}.s:hover{background:var(--neu)}
+.d{background:#10142B;color:#fff}
+.btn:disabled{background:var(--neu);color:var(--mut);cursor:not-allowed;border-color:transparent}
+.row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+label,.lab{display:block;font-weight:600;font-size:13px;color:var(--ink);margin-bottom:6px}
+select,input[type=search],textarea{font:400 15px Inter,sans-serif;color:var(--ink);background:var(--surf);border:1.5px solid var(--bd);border-radius:10px;min-height:44px;padding:9px 14px;width:100%}
+textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;min-height:96px}
+.err{color:var(--crit);font-size:12px;font-weight:500;margin-top:4px;min-height:18px}
+.badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 12px;border-radius:12px}
+.CRITICAL{background:var(--critb);color:var(--crit)}.HIGH{background:var(--highb);color:var(--high)}.MEDIUM{background:var(--medb);color:var(--med)}.LOW{background:var(--lowb);color:var(--low)}
+.st{display:inline-block;font-size:12px;font-weight:600;padding:3px 12px;border-radius:12px}
+.Active{background:var(--lowb);color:var(--low)}.Paused{background:var(--medb);color:var(--med)}.Error{background:var(--critb);color:var(--crit)}.Off{background:var(--neu);color:var(--mut)}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:640px}
+th{font-size:12px;text-align:left;color:var(--mut);padding:8px 12px;background:var(--bg)}td{padding:10px 12px;border-bottom:1px solid var(--ln)}
+code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+pre{background:#10142B;color:#E6E9FF;border-radius:10px;padding:12px 14px;font:12px/18px ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;margin:10px 0}
+.bar{height:12px;border-radius:6px;background:var(--neu);margin:4px 0 14px}.bar i{display:block;height:100%;border-radius:6px;background:var(--pri)}
+.bl{display:flex;justify-content:space-between;font-size:13px;font-weight:500}
+.sw{width:52px;height:30px;border-radius:15px;border:0;background:var(--bd);position:relative;cursor:pointer;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s}
+.sw[aria-checked=true]{background:var(--pri)}.sw[aria-checked=true]::after{left:25px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.repo{display:flex;align-items:center;gap:16px;padding:14px 4px;border-bottom:1px solid var(--ln);flex-wrap:wrap}
+.repo:last-child{border:0}.ic{width:44px;height:44px;border-radius:10px;background:var(--soft);color:var(--pri);display:grid;place-items:center;font-weight:700;font-size:13px}
+.repo .n{flex:1;min-width:180px}.repo .n b{display:block;color:var(--ink)}.repo .n span{font-size:13px;color:var(--mut)}
+.steps{list-style:none;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:18px}
+.steps li{display:flex;gap:12px;align-items:flex-start;font-weight:600;color:var(--ink);font-size:14px}.steps small{display:block;font-weight:500;color:var(--mut);font-size:12px}
+.dot{width:28px;height:28px;border-radius:50%;border:2.5px solid var(--pri);flex:none;display:grid;place-items:center;color:var(--prif);font-size:14px}
+.done .dot{background:var(--pri)}.now .dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--pri)}.wait .dot{border-color:var(--bd)}
+.prog{height:10px;border-radius:5px;background:var(--neu)}.prog i{display:block;height:100%;width:75%;border-radius:5px;background:var(--pri)}
+.note{border-radius:14px;padding:16px 20px;margin-top:20px}.warn{background:var(--medb);color:var(--med);border:1.5px solid var(--med)}.warn p{color:var(--tx)}.info{background:var(--soft)}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--ln);font-size:14px}.kv span{color:var(--mut)}.kv b{color:var(--ink);text-align:right}
+.login{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.brand{background:#10142B;color:#fff;padding:64px;display:flex;flex-direction:column;justify-content:center;gap:24px}
+.brand h1{color:#fff;font-size:44px;line-height:52px}.brand p{color:#C9CFE8;font-size:18px;line-height:28px}
+.brand .card{color:var(--tx);max-width:560px}
+.side{display:grid;place-items:center;padding:32px}.side .card{width:100%;max-width:440px;padding:36px}
+.stack{display:grid;gap:12px;margin:22px 0}
+.chart text{fill:var(--mut);font-size:11px}
+fieldset{border:0;padding:0;margin-bottom:20px}legend{font-weight:600;font-size:13px;color:var(--ink);margin-bottom:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;padding:8px 0;min-height:44px}.opt input{width:22px;height:22px;margin-top:2px;accent-color:var(--pri);flex:none}.opt small{display:block;color:var(--mut);font-size:13px}
+.live{min-height:24px;font-weight:600;color:var(--low);margin-top:10px}
+@media(max-width:900px){.app,.login{grid-template-columns:1fr}nav{position:static;height:auto;flex-direction:row;flex-wrap:wrap;padding:12px}.logo{padding:0 8px;flex-basis:100%}nav .me{display:none}.g4,.g2,.g2b,.steps{grid-template-columns:1fr 1fr}main{padding:24px 16px 48px}.brand{padding:32px}.brand h1{font-size:32px;line-height:40px}}
+@media(max-width:560px){.g4,.g2,.g2b,.steps{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main" data-skip>Skip to main content</a>
+<div class="app">
+<nav aria-label="Main">
+  <div class="logo"><span class="mark" aria-hidden="true">SR</span>SecureReview</div>
+  <a href="#dashboard">Dashboard</a><a href="#repos">Repositories</a><a href="#scan">Scans</a><a href="#config">Settings</a>
+  <div class="me">israt.nitu<br>Repository admin</div>
+</nav>
+<main id="main" tabindex="-1">
+
+<section id="login" aria-labelledby="t-login">
+<div class="login">
+ <div class="brand">
+  <div class="logo" style="padding:0"><span class="mark" aria-hidden="true">SR</span>SecureReview AI</div>
+  <h1>Catch security flaws before they merge.</h1>
+  <p>Static analysis finds known patterns. AI triage explains them and spots logic flaws. Built for small teams, and your code is never executed.</p>
+  <div class="card"><span class="badge HIGH">HIGH</span>
+   <p style="margin-top:8px"><b style="color:var(--ink)">SQL Injection (CWE-89)</b> · app/routes/user.py, line 42</p>
+   <p style="color:var(--mut);font-size:14px">User input is joined into a SQL query, so any record can be read.</p>
+   <pre>cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))</pre>
+   <p style="font-size:12px;color:var(--mut)">Semgrep + AI triage · Confidence 0.91 · Reply /dismiss to mark as a false positive</p></div>
+ </div>
+ <div class="side"><div class="card">
+  <h1 id="t-login" style="font-size:32px">Sign in</h1>
+  <p class="sub" style="margin-bottom:0">Connect your Git provider to start reviewing pull requests.</p>
+  <div class="stack"><a class="btn d" href="#dashboard">Continue with GitHub</a><a class="btn s" href="#dashboard">Continue with GitLab (beta)</a></div>
+  <div class="note info" style="margin:0"><b style="color:var(--ink)">Your code stays yours</b><p style="font-size:13px">Code is never executed. Only a snippet of up to 10 lines per finding is stored, and it is deleted within 24 hours of unlinking.</p></div>
+ </div></div>
+</div>
+</section>
+
+<section id="dashboard" aria-labelledby="t-dash" hidden>
+<h1 id="t-dash">Vulnerability dashboard</h1><p class="sub">Findings across your linked repositories.</p>
+<div class="row" style="margin-bottom:20px">
+ <div style="flex:1;min-width:160px"><label for="f1">Repository</label><select id="f1"><option>All repositories</option><option>shop-api</option><option>web-client</option></select></div>
+ <div style="flex:1;min-width:160px"><label for="f2">Date range</label><select id="f2"><option>Last 8 weeks</option><option>Last 4 weeks</option></select></div>
+ <div style="flex:1;min-width:160px"><label for="f3">Severity</label><select id="f3"><option>All severities</option><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+ <button class="btn s" type="button">Download CSV</button>
+</div>
+<div class="grid g4">
+ <div class="card kpi"><span>Open findings</span><b>38</b><span>Down 12% vs last month</span></div>
+ <div class="card kpi"><span>Critical</span><b style="color:var(--crit)">3</b><span>Needs action this week</span></div>
+ <div class="card kpi"><span>Fixed this week</span><b style="color:var(--low)">21</b><span>Up 5 vs last week</span></div>
+ <div class="card kpi"><span>False-positive rate</span><b style="color:var(--low)">12%</b><span>Down 8 points after feedback</span></div>
+</div>
+<div class="grid g2 mt">
+ <div class="card"><h2>Findings over time</h2><p style="font-size:13px;color:var(--mut)">Summary: open findings fell from 42 to 26 over eight weeks.</p>
+  <svg class="chart" viewBox="0 0 560 226" width="100%" role="img" aria-label="Line chart of weekly open findings, falling from 42 in week 37 to 26 in week 44">
+   <g stroke="var(--ln)"><line x1="30" x2="540" y1="190" y2="190"/><line x1="30" x2="540" y1="142" y2="142"/><line x1="30" x2="540" y1="94" y2="94"/><line x1="30" x2="540" y1="46" y2="46"/></g>
+   <text x="0" y="194">0</text><text x="0" y="146">15</text><text x="0" y="98">30</text><text x="0" y="50">45</text>
+   <polyline fill="none" stroke="var(--pri)" stroke-width="3" stroke-linejoin="round" points="30,55.6 102,36.4 174,62 246,42.8 318,71.6 390,78 462,90.8 534,106.8"/>
+   <g fill="var(--surf)" stroke="var(--pri)" stroke-width="3"><circle cx="30" cy="55.6" r="5"/><circle cx="102" cy="36.4" r="5"/><circle cx="174" cy="62" r="5"/><circle cx="246" cy="42.8" r="5"/><circle cx="318" cy="71.6" r="5"/><circle cx="390" cy="78" r="5"/><circle cx="462" cy="90.8" r="5"/><circle cx="534" cy="106.8" r="5"/></g>
+   <g text-anchor="middle"><text x="30" y="212">W37</text><text x="102" y="212">W38</text><text x="174" y="212">W39</text><text x="246" y="212">W40</text><text x="318" y="212">W41</text><text x="390" y="212">W42</text><text x="462" y="212">W43</text><text x="534" y="212">W44</text></g>
+  </svg></div>
+ <div class="card"><h2 style="margin-bottom:14px">Findings by CWE type</h2>
+  <div class="bl"><span>CWE-89 SQL injection</span><b>14</b></div><div class="bar"><i style="width:100%"></i></div>
+  <div class="bl"><span>CWE-79 Cross-site scripting</span><b>9</b></div><div class="bar"><i style="width:64%"></i></div>
+  <div class="bl"><span>CWE-798 Hard-coded secret</span><b>7</b></div><div class="bar"><i style="width:50%"></i></div>
+  <div class="bl"><span>CWE-22 Path traversal</span><b>5</b></div><div class="bar"><i style="width:36%"></i></div>
+  <div class="bl"><span>CWE-327 Weak crypto</span><b>3</b></div><div class="bar"><i style="width:21%"></i></div></div>
+</div>
+<div class="card mt"><h2 style="margin-bottom:10px">Recent findings</h2><div class="tw"><table>
+ <caption class="sr" style="position:absolute;left:-9999px">Recent findings</caption>
+ <thead><tr><th scope="col">Severity</th><th scope="col">Finding</th><th scope="col">File</th><th scope="col">Repository</th><th scope="col">Status</th></tr></thead><tbody>
+ <tr><td><span class="badge HIGH">HIGH</span></td><td>SQL Injection (CWE-89)</td><td><code>app/routes/user.py:42</code></td><td>shop-api</td><td><b>Open</b></td></tr>
+ <tr><td><span class="badge CRITICAL">CRITICAL</span></td><td>Hard-coded secret (CWE-798)</td><td><code>config/settings.py:12</code></td><td>shop-api</td><td><b>Open</b></td></tr>
+ <tr><td><span class="badge MEDIUM">MEDIUM</span></td><td>Reflected XSS (CWE-79)</td><td><code>web/search.js:88</code></td><td>web-client</td><td><b>Open</b></td></tr>
+ <tr><td><span class="badge LOW">LOW</span></td><td>Weak hash MD5 (CWE-327)</td><td><code>tests/test_api.py:15</code></td><td>shop-api</td><td>Dismissed</td></tr>
+ </tbody></table></div></div>
+</section>
+
+<section id="repos" aria-labelledby="t-repo" hidden>
+<h1 id="t-repo">Repositories</h1><p class="sub">Link a repository to scan every new or updated pull request.</p>
+<div class="row" style="margin-bottom:20px"><div style="flex:2;min-width:220px"><label for="rs">Search repositories</label><input id="rs" type="search" placeholder="Search by name"></div>
+ <div style="flex:1;min-width:160px"><label for="rp">Provider</label><select id="rp"><option>All providers</option><option>GitHub</option><option>GitLab</option></select></div></div>
+<div class="card" id="repolist">
+ <div class="repo"><span class="ic" aria-hidden="true">GI</span><div class="n"><b>israt.nitu/shop-api</b><span>GitHub · Last event 2 minutes ago</span></div><span class="st Active">Active</span><span class="state">On</span><button class="sw" role="switch" aria-checked="true" aria-label="Scan israt.nitu/shop-api"></button></div>
+ <div class="repo"><span class="ic" aria-hidden="true">GI</span><div class="n"><b>israt.nitu/web-client</b><span>GitHub · Last event 1 hour ago</span></div><span class="st Active">Active</span><span class="state">On</span><button class="sw" role="switch" aria-checked="true" aria-label="Scan israt.nitu/web-client"></button></div>
+ <div class="repo"><span class="ic" aria-hidden="true">GI</span><div class="n"><b>nova-dev/payments-svc</b><span>GitHub · Last event 3 days ago</span></div><span class="st Paused">Paused</span><span class="state">On</span><button class="sw" role="switch" aria-checked="true" aria-label="Scan nova-dev/payments-svc"></button></div>
+ <div class="repo"><span class="ic" aria-hidden="true">GI</span><div class="n"><b>nashita/ml-pipeline</b><span style="color:var(--crit);font-weight:600">GitLab · Webhook failed</span></div><span class="st Error">Error</span><button class="btn s" style="min-height:44px">Retry</button><span class="state">On</span><button class="sw" role="switch" aria-checked="true" aria-label="Scan nashita/ml-pipeline"></button></div>
+ <div class="repo"><span class="ic" aria-hidden="true">GI</span><div class="n"><b>israt.nitu/docs-site</b><span>GitHub · No events</span></div><span class="st Off">Not linked</span><span class="state">Off</span><button class="sw" role="switch" aria-checked="false" aria-label="Scan israt.nitu/docs-site"></button></div>
+</div>
+<div class="note info"><b style="color:var(--ink)">What happens when you link a repository</b><p>We register a webhook with a new random secret, encrypted at rest. Unlinking removes the webhook. You need admin rights on the repository.</p></div>
+<p class="live" id="repolive" role="status"></p>
+</section>
+
+<section id="scan" aria-labelledby="t-scan" hidden>
+<h1 id="t-scan">PR #42 – Add user lookup endpoint</h1><p class="sub">shop-api · commit a1b2c3d · opened by israt.nitu</p>
+<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><h2>Step 3 of 4 – AI triage in progress</h2><span class="st Active" style="background:var(--soft);color:var(--pri)">Mode: Hybrid</span></div>
+ <div class="prog" style="margin-top:14px" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Scan progress"><i></i></div>
+ <ol class="steps"><li class="done"><span class="dot" aria-hidden="true">✓</span><span>Fetching diff<small>Done</small></span></li><li class="done"><span class="dot" aria-hidden="true">✓</span><span>Static analysis<small>Done</small></span></li><li class="now"><span class="dot" aria-hidden="true"></span><span>AI triage<small>In progress</small></span></li><li class="wait"><span class="dot" aria-hidden="true"></span><span>Posting comments<small>Waiting</small></span></li></ol></div>
+<div class="grid g2b mt">
+ <div class="card"><h2>Run details</h2>
+  <div class="kv"><span>Static tools</span><b>Semgrep, Bandit, ESLint</b></div><div class="kv"><span>Duration</span><b>74 seconds so far</b></div><div class="kv"><span>Estimated AI cost</span><b>$0.04 (limit $0.10)</b></div>
+  <div class="bl" style="margin-top:14px"><span>LLM token budget</span><b>8,420 / 12,000</b></div><div class="bar"><i style="width:70%"></i></div></div>
+ <div class="card"><h2>Comment as posted on GitHub</h2>
+  <div style="border:1.5px solid var(--ln);border-radius:12px;padding:16px;margin-top:12px"><span class="badge HIGH">HIGH</span>
+   <p style="margin-top:6px"><b style="color:var(--ink)">SQL Injection (CWE-89)</b> – app/routes/user.py, line 42</p>
+   <p style="color:var(--mut);font-size:14px">User input is joined into a SQL query, so any record can be read.</p>
+   <pre>cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))</pre>
+   <p style="font-size:12px;color:var(--mut)">Semgrep + AI triage · Confidence 0.91 · Reply /dismiss to mark as a false positive</p></div></div>
+</div>
+<div class="note warn"><b>Fallback state: AI triage unavailable</b><p>If the AI service fails or takes over 30 seconds, the scan still completes. Static findings are posted and labelled “AI triage unavailable”.</p></div>
+</section>
+
+<section id="config" aria-labelledby="t-cfg" hidden>
+<h1 id="t-cfg">Repository settings</h1><p class="sub">shop-api · version 2 saved 3 Nov</p>
+<div class="grid g2b">
+ <form class="card" id="form" novalidate>
+  <fieldset><legend>Languages</legend><div class="row" style="gap:24px"><label class="opt"><input type="checkbox" checked> Python</label><label class="opt"><input type="checkbox" checked> JavaScript</label><label class="opt"><input type="checkbox" checked> TypeScript</label></div></fieldset>
+  <div style="max-width:300px;margin-bottom:20px"><label for="sev">Minimum severity to post</label><select id="sev"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></div>
+  <fieldset><legend>Analysis mode</legend>
+   <label class="opt"><input type="radio" name="m"><span>Tools only<small>Fast and rule-based. No AI is used.</small></span></label>
+   <label class="opt"><input type="radio" name="m"><span>AI only<small>Explains issues but may miss known patterns.</small></span></label>
+   <label class="opt"><input type="radio" name="m" checked><span>Hybrid (recommended)<small>Rules run first, then AI triage and explanations.</small></span></label></fieldset>
+  <label for="ign">Ignore rules (one path pattern per line)</label><textarea id="ign" aria-describedby="ign-e">tests/**
+vendor/**</textarea><p class="err" id="ign-e" role="alert"></p>
+  <div class="row" style="margin-top:12px"><button class="btn p" id="save" type="submit" disabled>Save changes</button><button class="btn s" type="reset">Discard</button></div>
+  <p style="font-size:12px;color:var(--mut);margin-top:8px">Save is enabled only when a value changes.</p><p class="live" id="savelive" role="status"></p>
+ </form>
+ <div>
+  <div class="note info" style="margin:0 0 20px"><b style="color:var(--ink);font-size:18px">Your code is never executed</b><p>Only a snippet of up to 10 lines per finding is stored, and it is deleted within 24 hours of unlinking the repository. Secrets are redacted before anything reaches the AI.</p></div>
+  <div class="card"><h2>Review finding</h2><p style="margin-top:8px"><span class="badge LOW">LOW</span></p>
+   <p style="color:var(--ink);font-weight:600">Weak hash MD5 (CWE-327)</p><p class="mono" style="color:var(--mut)">tests/test_api.py:15</p>
+   <div style="margin-top:14px"><label for="why">Reason (required)</label><select id="why" aria-describedby="why-e"><option value="">Choose a reason</option><option>Test file uses MD5 on purpose</option><option>Code is not reachable</option><option>Already mitigated elsewhere</option></select><p class="err" id="why-e" role="alert"></p></div>
+   <label for="cm">Comment (optional)</label><textarea id="cm" style="font-family:Inter,sans-serif;font-size:15px" placeholder="Add context for your team"></textarea>
+   <div class="stack" style="margin-bottom:0"><button class="btn s" type="button" id="conf">Confirm finding</button><button class="btn p" type="button" id="dis">Dismiss as false positive</button></div>
+   <p class="live" id="dlive" role="status"></p><p style="font-size:12px;color:var(--mut)">Dismissals teach future scans for this repository.</p></div>
+ </div>
+</div>
+</section>
+
+</main></div>
+<script>
+const V=['login','dashboard','repos','scan','config'];
+function route(first){let h=location.hash.slice(1);if(!V.includes(h))h='login';
+ V.forEach(v=>document.getElementById(v).hidden=v!==h);document.body.classList.toggle('auth',h==='login');
+ document.querySelectorAll('nav a').forEach(a=>a.getAttribute('href')==='#'+h?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+ window.scrollTo(0,0);if(!first)document.getElementById('main').focus({preventScroll:true})}
+addEventListener('hashchange',()=>route(false));route(true);
+document.querySelector('[data-skip]').addEventListener('click',e=>{e.preventDefault();document.getElementById('main').focus()});
+document.querySelectorAll('.sw').forEach(b=>b.addEventListener('click',()=>{const on=b.getAttribute('aria-checked')!=='true';b.setAttribute('aria-checked',on);
+ b.previousElementSibling.textContent=on?'On':'Off';document.getElementById('repolive').textContent=b.getAttribute('aria-label').replace('Scan ','')+(on?' linked.':' unlinked.')}));
+const form=document.getElementById('form'),save=document.getElementById('save');
+form.addEventListener('input',()=>save.disabled=false);form.addEventListener('reset',()=>setTimeout(()=>{save.disabled=true},0));
+form.addEventListener('submit',e=>{e.preventDefault();const v=document.getElementById('ign').value.split('\n').filter(Boolean),bad=v.find(x=>/[\[\(]/.test(x)&&!/[\]\)]/.test(x)),er=document.getElementById('ign-e'),ta=document.getElementById('ign');
+ if(bad){er.textContent='“'+bad+'” is not a valid path pattern. Try something like tests/**';ta.style.borderColor='var(--crit)';ta.focus();return}
+ er.textContent='';ta.style.borderColor='';save.disabled=true;document.getElementById('savelive').textContent='Saved as version 3.'});
+document.getElementById('dis').addEventListener('click',()=>{const w=document.getElementById('why'),e=document.getElementById('why-e'),l=document.getElementById('dlive');
+ if(!w.value){e.textContent='Choose a reason before dismissing.';w.focus();l.textContent='';return}e.textContent='';l.textContent='Dismissed. Similar findings will rank lower in future scans.'});
+document.getElementById('conf').addEventListener('click',()=>{document.getElementById('why-e').textContent='';document.getElementById('dlive').textContent='Confirmed as a real issue.'});
+</script>
+</body>
+</html>
